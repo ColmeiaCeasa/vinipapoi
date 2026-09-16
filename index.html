@@ -2,86 +2,67 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Mural Animado Vinicius Papoi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vinicius Papoi - Typewriter</title>
   <style>
     body {
       margin: 0;
       background-color: black;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden; /* Impede a rolagem da página */
-    }
-
-    /* Contêiner para o texto repetido */
-    #mural {
       color: yellow;
-      font-family: sans-serif; /* Fonte limpa */
-      font-size: 14px; /* Tamanho pequeno para preencher bem */
-      line-height: 1.2; /* Espaçamento entre as linhas */
-      text-align: justify; /* Justifica o texto para preencher as laterais */
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Colunas automáticas */
-      gap: 5px; /* Espaço entre cada bloco de texto */
-      padding: 20px;
-      width: 100vw;
+      font-family: 'Courier New', Consolas, monospace; /* Fonte estilo código */
+      font-size: 14px;
+      line-height: 1.4;
+      padding: 15px;
+      box-sizing: border-box;
       height: 100vh;
-      overflow-y: auto; /* Permite rolagem se o texto for maior que a tela */
+      overflow: hidden; /* Impede barras de rolagem */
     }
 
-    /* Estilo de cada letra animada */
-    .letra-animada {
-      display: inline-block; /* Necessário para aplicar transformações */
-      animation: wave 1s infinite ease-in-out; /* Aplica a animação 'wave' */
-      will-change: transform, color; /* Otimiza a animação */
+    #terminal {
+      white-space: pre-wrap;
+      word-break: break-word;
     }
 
-    /* Definição da animação de onda */
-    @keyframes wave {
-      0%, 100% {
-        transform: translateY(0); /* Posição normal */
-        color: yellow; /* Cor normal */
-      }
-      50% {
-        transform: translateY(-5px); /* Sobe 5 pixels */
-        color: lime; /* Muda sutilmente para verde-lima */
-      }
+    /* Bloco do cursor piscando estilo terminal */
+    #cursor {
+      display: inline-block;
+      background-color: yellow;
+      width: 8px;
+      height: 15px;
+      margin-left: 2px;
+      vertical-align: middle;
+      animation: piscar 0.7s infinite;
+    }
+
+    @keyframes piscar {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
     }
   </style>
 </head>
 <body>
 
-  <div id="mural"></div>
+  <span id="terminal"></span><span id="cursor"></span>
 
   <script>
-    const mural = document.getElementById('mural');
-    const nomeBase = "Vinicius Papoi";
-    const numeroDeCopias = 2000; // Ajuste conforme necessário
+    const terminal = document.getElementById('terminal');
+    const textoBase = "Vinicius Papoi ";
+    let index = 0;
 
-    for (let i = 0; i < numeroDeCopias; i++) {
-      const containerNome = document.createElement('span');
-      containerNome.style.whiteSpace = "nowrap"; // Impede o nome de quebrar
+    function digitar() {
+      // Calcula o limite de caracteres com base no tamanho da tela
+      const limiteTela = Math.floor((window.innerWidth * window.innerHeight) / 90);
 
-      // Loop para criar cada letra como um span individual para animar
-      for (let j = 0; j < nomeBase.length; j++) {
-        const letraSpan = document.createElement('span');
-        letraSpan.className = 'letra-animada';
-        letraSpan.textContent = nomeBase[j];
-
-        // A mágica: calcula um atraso para cada letra para criar a onda
-        const delay = (j + (i * nomeBase.length)) * 0.05; // 0.05s por letra
-        letraSpan.style.animationDelay = `${delay}s`;
-
-        containerNome.appendChild(letraSpan);
+      if (terminal.textContent.length < limiteTela) {
+        terminal.textContent += textoBase[index];
+        index = (index + 1) % textoBase.length; // Loop no nome
+        
+        // Controla a velocidade da digitação (15ms = super fluido)
+        setTimeout(digitar, 15); 
       }
-
-      // Adiciona um espaço após o nome completo
-      const espaço = document.createTextNode(" ");
-      containerNome.appendChild(espaço);
-      
-      mural.appendChild(containerNome);
     }
+
+    digitar();
   </script>
 </body>
 </html>
