@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Mural Vinicius Papoi</title>
+  <title>Mural Animado Vinicius Papoi</title>
   <style>
     body {
       margin: 0;
@@ -23,15 +23,30 @@
       text-align: justify; /* Justifica o texto para preencher as laterais */
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Colunas automáticas */
-      gap: 5px; /* Espaço entre cada texto */
+      gap: 5px; /* Espaço entre cada bloco de texto */
       padding: 20px;
       width: 100vw;
       height: 100vh;
       overflow-y: auto; /* Permite rolagem se o texto for maior que a tela */
     }
 
-    .nome {
-      white-space: nowrap; /* Impede que o nome se quebre em duas linhas */
+    /* Estilo de cada letra animada */
+    .letra-animada {
+      display: inline-block; /* Necessário para aplicar transformações */
+      animation: wave 1s infinite ease-in-out; /* Aplica a animação 'wave' */
+      will-change: transform, color; /* Otimiza a animação */
+    }
+
+    /* Definição da animação de onda */
+    @keyframes wave {
+      0%, 100% {
+        transform: translateY(0); /* Posição normal */
+        color: yellow; /* Cor normal */
+      }
+      50% {
+        transform: translateY(-5px); /* Sobe 5 pixels */
+        color: lime; /* Muda sutilmente para verde-lima */
+      }
     }
   </style>
 </head>
@@ -41,14 +56,31 @@
 
   <script>
     const mural = document.getElementById('mural');
-    const nome = "Vinicius Papoi";
-    const numeroDeCopias = 5000; // Número de cópias para preencher a tela
+    const nomeBase = "Vinicius Papoi";
+    const numeroDeCopias = 2000; // Ajuste conforme necessário
 
     for (let i = 0; i < numeroDeCopias; i++) {
-      const span = document.createElement('span');
-      span.className = 'nome';
-      span.textContent = nome;
-      mural.appendChild(span);
+      const containerNome = document.createElement('span');
+      containerNome.style.whiteSpace = "nowrap"; // Impede o nome de quebrar
+
+      // Loop para criar cada letra como um span individual para animar
+      for (let j = 0; j < nomeBase.length; j++) {
+        const letraSpan = document.createElement('span');
+        letraSpan.className = 'letra-animada';
+        letraSpan.textContent = nomeBase[j];
+
+        // A mágica: calcula um atraso para cada letra para criar a onda
+        const delay = (j + (i * nomeBase.length)) * 0.05; // 0.05s por letra
+        letraSpan.style.animationDelay = `${delay}s`;
+
+        containerNome.appendChild(letraSpan);
+      }
+
+      // Adiciona um espaço após o nome completo
+      const espaço = document.createTextNode(" ");
+      containerNome.appendChild(espaço);
+      
+      mural.appendChild(containerNome);
     }
   </script>
 </body>
