@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Vini</title>
+  <title>Mural Vinicius Papoi</title>
   <style>
     body {
       margin: 0;
@@ -11,53 +11,45 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      overflow: hidden;
+      overflow: hidden; /* Impede a rolagem da página */
+    }
+
+    /* Contêiner para o texto repetido */
+    #mural {
+      color: yellow;
+      font-family: sans-serif; /* Fonte limpa */
+      font-size: 14px; /* Tamanho pequeno para preencher bem */
+      line-height: 1.2; /* Espaçamento entre as linhas */
+      text-align: justify; /* Justifica o texto para preencher as laterais */
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Colunas automáticas */
+      gap: 5px; /* Espaço entre cada texto */
+      padding: 20px;
+      width: 100vw;
+      height: 100vh;
+      overflow-y: auto; /* Permite rolagem se o texto for maior que a tela */
+    }
+
+    .nome {
+      white-space: nowrap; /* Impede que o nome se quebre em duas linhas */
     }
   </style>
 </head>
 <body>
 
-  <canvas id="canvas"></canvas>
+  <div id="mural"></div>
 
   <script>
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
+    const mural = document.getElementById('mural');
+    const nome = "Vinicius Papoi";
+    const numeroDeCopias = 5000; // Número de cópias para preencher a tela
 
-    // Ajusta o tamanho da tela
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-
-    ctx.fillStyle = '#5ddb37';
-    ctx.font = 'bold 10px Arial';
-    ctx.textAlign = 'center';
-
-    let scale = 11;
-    let i = 0;
-
-    function desenhar() {
-      if (scale > 16) return; // Encerra ao terminar os loops
-
-      const angle = (i * Math.PI * 2) / 120;
-      const x = 16 * Math.pow(Math.sin(angle), 3) * scale;
-      const y = (13 * Math.cos(angle) - 5 * Math.cos(2 * angle) - 2 * Math.cos(3 * angle) - Math.cos(4 * angle)) * scale;
-
-      // Inverte o eixo Y para desenhar na orientação correta no Canvas
-      ctx.fillText("Vini PAPOI", centerX + x, centerY - y);
-
-      i++;
-      if (i >= 120) {
-        i = 0;
-        scale++;
-      }
-
-      // Controla a velocidade do desenho (10ms)
-      setTimeout(desenhar, 10);
+    for (let i = 0; i < numeroDeCopias; i++) {
+      const span = document.createElement('span');
+      span.className = 'nome';
+      span.textContent = nome;
+      mural.appendChild(span);
     }
-
-    desenhar();
   </script>
 </body>
 </html>
